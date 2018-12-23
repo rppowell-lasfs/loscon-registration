@@ -1,4 +1,4 @@
-package org.loscon.registration.db.dbf;
+package org.loscon.registration.db.dbf.models;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -6,9 +6,14 @@ import javax.persistence.Id;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 
-@Entity
 public class Member {
+
+    public final static List<String> DBFHeaders = Arrays.asList(
+            "CLASS", "NUMBER", "LNAME", "FNAME", "ADDR1", "ADDR2", "CITY", "STATE", "ZIP", "COUNTRY", "ENTERED", "AMOUNT", "EMAIL", "BADGE1", "BADGE2", "NOTES", "ID", "PICKEDUP", "VERSION"
+    );
+
     @Id
     @Column(name="id")
     public BigDecimal NUMBER;
@@ -74,4 +79,27 @@ public class Member {
         m.put("NOTES", this.NOTES);
         return m.toString();
     }
+
+    public static Member ExtractFromMemberDBFRecord(Object[] dbfrecord) {
+        Member m = new Member(
+                (String)dbfrecord[Member.DBFHeaders.indexOf("CLASS")],
+                (BigDecimal)dbfrecord[Member.DBFHeaders.indexOf("NUMBER")],
+                (String)dbfrecord[Member.DBFHeaders.indexOf("LNAME")],
+                (String)dbfrecord[Member.DBFHeaders.indexOf("FNAME")],
+                (String)dbfrecord[Member.DBFHeaders.indexOf("ADDR1")],
+                (String)dbfrecord[Member.DBFHeaders.indexOf("ADDR2")],
+                (String)dbfrecord[Member.DBFHeaders.indexOf("CITY")],
+                (String)dbfrecord[Member.DBFHeaders.indexOf("STATE")],
+                (String)dbfrecord[Member.DBFHeaders.indexOf("ZIP")],
+                (String)dbfrecord[Member.DBFHeaders.indexOf("COUNTRY")],
+                (String)dbfrecord[Member.DBFHeaders.indexOf("ENTERED")],
+                (BigDecimal)dbfrecord[Member.DBFHeaders.indexOf("AMOUNT")],
+                (String)dbfrecord[Member.DBFHeaders.indexOf("EMAIL")],
+                (String)dbfrecord[Member.DBFHeaders.indexOf("BADGE1")],
+                (String)dbfrecord[Member.DBFHeaders.indexOf("BADGE2")],
+                (String)dbfrecord[Member.DBFHeaders.indexOf("NOTES")]
+        );
+        return m;
+    }
+
 }

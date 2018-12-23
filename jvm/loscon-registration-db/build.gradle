@@ -12,9 +12,7 @@ repositories {
 
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.3.11'
-    // https://mvnrepository.com/artifact/org.hibernate/hibernate-core
-    compile group: 'org.hibernate', name: 'hibernate-core', version: '5.2.16.Final'
-
+    
     // Legacy DBF
 
     // https://mvnrepository.com/artifact/com.linuxense/javadbf
@@ -25,6 +23,14 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc
     compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.21.0.1'
+    
+    // ORM
+
+    // https://mvnrepository.com/artifact/com.j256.ormlite/ormlite-jdbc
+    compile group: 'com.j256.ormlite', name: 'ormlite-jdbc', version: '5.1'
+
+    // https://mvnrepository.com/artifact/org.hibernate/hibernate-core
+    compile group: 'org.hibernate', name: 'hibernate-core', version: '5.2.16.Final'
     // https://mvnrepository.com/artifact/com.zsoltfabok/sqlite-dialect
     compile group: 'com.zsoltfabok', name: 'sqlite-dialect', version: '1.0'
 

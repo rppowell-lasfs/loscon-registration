@@ -2,34 +2,56 @@ package org.loscon.registration.db.dbf;
 
 import com.linuxense.javadbf.DBFField;
 import com.linuxense.javadbf.DBFReader;
+import org.loscon.registration.db.dbf.models.Master;
+import org.loscon.registration.db.dbf.models.Member;
+import org.loscon.registration.db.dbf.models.RegistrationClass;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 public class DBFReaderLegacyTests {
+
     @Test(singleThreaded=true)
-    public void DumpClassesDBF() throws IOException {
-        String classesDBF = "legacy/2017-05-28-classes.dbf";
+    public void DumpRegConfigDBF() throws IOException {
+        String classesDBF = "testdata/legacy/dbf/2017-05-28-regconfi.dbf";
         File file = new File(classesDBF);
         FileInputStream fs = new FileInputStream(new File(classesDBF));
+        DBFReader reader = new DBFReader(fs);
+
+        Properties conventionproperties = new Properties();
+
+        System.out.println(DBFUtils.extractTableHeaderNames(reader));
+
+        Object[] rowObjects;
+        while( (rowObjects = reader.nextRecord()) != null) {
+            for( int i=0; i<rowObjects.length; i++) {
+                System.out.println(reader.getField(i).getName() + ": " + rowObjects[i].toString() + "(" + rowObjects[i].getClass() + ")");
+                conventionproperties.setProperty(reader.getField(i).getName(), rowObjects[i].toString());
+            }
+            System.out.println(conventionproperties.toString());
+        }
+
+    }
+
+    @Test(singleThreaded=true)
+    public void DumpClassesDBF() throws Exception {
+        String classesDBFFilename = "testdata/legacy/dbf/2017-05-28-classes.dbf";
+        FileInputStream fs = new FileInputStream(new File(classesDBFFilename));
 
         DBFReader reader = null;
         reader = new DBFReader(fs);
 
-        int numberOfFields = reader.getFieldCount();
+        List<String> actualHeaders = DBFUtils.extractTableHeaderNames(reader);
+        Assert.assertEquals(actualHeaders, RegistrationClass.DBFHeaders);
 
-        // TODO: verify ClassesDBF Header & Field Types
-        DBFUtils.extractTableHeaderNames(reader);
-
-        Object []rowObjects;
-
+        Object[] rowObjects;
         while( (rowObjects = reader.nextRecord()) != null) {
-            RegistrationClass r = DBFUtils.RegistrationClassFromDBFRecord(rowObjects);
+            RegistrationClass r = RegistrationClass.ExtractFromDBFRecord(rowObjects);
             System.out.println(r.toString());
         }
 
@@ -37,85 +59,39 @@ public class DBFReaderLegacyTests {
     }
 
     @Test(singleThreaded=true)
-    public void DumpMasterDBF() throws Exception {
-        String classesDBF = "legacy/2017-05-28-master.dbf";
-        File file = new File(classesDBF);
-        FileInputStream fs = new FileInputStream(new File(classesDBF));
-
-        DBFReader reader = null;
-        reader = new DBFReader(fs);
-
-        int numberOfFields = reader.getFieldCount();
-
-        // TODO: verify MasterDBF Header & Field Types
-
-        for( int i=0; i<numberOfFields; i++) {
-            DBFField field = reader.getField(i);
-            System.out.println(field.getName());
-        }
-
-        Object []rowObjects;
-        //rowObjects = reader.nextRecord();
-        //if (rowObjects != null) {
-        while( (rowObjects = reader.nextRecord()) != null) {
-//            for( int i=0; i<rowObjects.length; i++) {
-//                System.out.println(
-//                        ((rowObjects[i] != null) ? rowObjects[i].getClass() : "null")
-//                                + ": "
-//                                + ((reader.getField(i) != null) ? reader.getField(i).getName() : "null")
-//                );
-//            }
-            Master m = DBFUtils.MasterFromMasterDBFRecord(rowObjects);
-            System.out.println(m);
-        }
-        fs.close();
-    }
-
-    @Test(singleThreaded=true)
     public void DumpMembersDBF() throws Exception {
-        String classesDBF = "legacy/2017-05-28-members.dbf";
+        String memberDBFFilename = "testdata/legacy/dbf/2017-05-28-members.dbf";
 
-        DBFReader reader = new DBFReader(new FileInputStream(new File(classesDBF)));
+        DBFReader reader = new DBFReader(new FileInputStream(new File(memberDBFFilename)));
 
-        if (!DBFUtils.extractTableHeaderNames(reader).equals(DBFUtils.MemberDBFHeader)) {
-            throw new Exception("MembersDBF Header mismatch");
-        }
+        List<String> actualHeaders = DBFUtils.extractTableHeaderNames(reader);
+        Assert.assertEquals(actualHeaders, Member.DBFHeaders);
 
         Object[] rowObjects;
-
         while( (rowObjects = reader.nextRecord()) != null) {
-            Member m = DBFUtils.MemberFromMemberDBFRecord(rowObjects);
+            Member m = Member.ExtractFromMemberDBFRecord(rowObjects);
             System.out.println(m.toString());
         }
         reader.close();
     }
 
-
     @Test(singleThreaded=true)
-    public void DumpRegConfigDBF() throws IOException {
-        String classesDBF = "legacy/2017-05-28-regconfi.dbf";
-        File file = new File(classesDBF);
-        FileInputStream fs = new FileInputStream(new File(classesDBF));
-
-        Properties conventionproperties = new Properties();
+    public void DumpMasterDBF() throws Exception {
+        String masterDBFFilename = "testdata/legacy/dbf/2017-05-28-master.dbf";
+        FileInputStream fs = new FileInputStream(new File(masterDBFFilename));
 
         DBFReader reader = null;
         reader = new DBFReader(fs);
 
-        int numberOfFields = reader.getFieldCount();
+        List<String> actualHeaders = DBFUtils.extractTableHeaderNames(reader);
+        Assert.assertEquals(actualHeaders, Master.DBFHeaders);
 
-        for( int i=0; i<numberOfFields; i++) {
-            DBFField field = reader.getField(i);
-            System.out.println(field.getName());
+        Object[] rowObjects;
+        while( (rowObjects = reader.nextRecord()) != null) {
+            Master m = Master.ExtractFromDBFRecord(rowObjects);
+            //System.out.println(m);
         }
-        Object []rowObjects;
-
-        rowObjects = reader.nextRecord();
-        if (rowObjects != null) {
-            for( int i=0; i<rowObjects.length; i++) {
-                conventionproperties.setProperty(reader.getField(i).getName(), rowObjects[i].toString());
-            }
-        }
-        System.out.println(conventionproperties.toString());
+        fs.close();
     }
+
 }

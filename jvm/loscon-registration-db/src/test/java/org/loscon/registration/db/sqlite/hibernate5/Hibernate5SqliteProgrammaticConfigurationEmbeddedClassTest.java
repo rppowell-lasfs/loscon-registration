@@ -1,3 +1,5 @@
+package org.loscon.registration.db.sqlite.hibernate5;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -72,7 +74,7 @@ public class Hibernate5SqliteProgrammaticConfigurationEmbeddedClassTest {
     public void readEmbeddedMessage() {
         Session session = factory.openSession();
         @SuppressWarnings("unchecked")
-        List<EmbeddedMessage> list = (List<EmbeddedMessage>) session.createQuery("from Hibernate5SqliteProgrammaticConfigurationEmbeddedClassTest$EmbeddedMessage").list();
+        List<EmbeddedMessage> list = (List<EmbeddedMessage>) session.createQuery("from org.loscon.registration.db.sqlite.hibernate5.Hibernate5SqliteProgrammaticConfigurationEmbeddedClassTest$EmbeddedMessage").list();
         if (list.size() > 1) {
             Assert.fail("EmbeddedMessage configuration in error; table should contain only one."
                     +" Set ddl to create-drop.");

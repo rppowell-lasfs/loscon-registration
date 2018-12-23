@@ -1,4 +1,4 @@
-package org.loscon.registration.db.dbf;
+package org.loscon.registration.db.dbf.models;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,12 +8,15 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.List;
 
-@Entity
 public class RegistrationClass {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    public final static List<String> DBFHeaders = Arrays.asList(
+            //"AMOUNT", "BADGEOK", "CLASS", "EDATE", "FRIDAY", "KEY", "METACLASS", "NAME", "ONBADGE", "ORDER", "SATURDAY", "SDATE", "SUNDAY", "THURSDAY", "TIMESTAMP"
+            "ORDER", "KEY", "CLASS", "SDATE", "EDATE", "AMOUNT", "METACLASS", "BADGEOK", "TIMESTAMP", "ONBADGE", "NAME", "FRIDAY", "SATURDAY", "SUNDAY", "THURSDAY"
+    );
+
     public long ID;
 
     public BigDecimal amount;
@@ -104,5 +107,26 @@ public class RegistrationClass {
                 String.valueOf(this.isAvailableSaturday),
                 String.valueOf(this.isAvailableSunday)
         ).toString();
+    }
+
+    public static RegistrationClass ExtractFromDBFRecord(Object[] dbfrecord) {
+        RegistrationClass r = new RegistrationClass(
+                (String)dbfrecord[DBFHeaders.indexOf("CLASS")], // String registrationClass,
+                (String)dbfrecord[DBFHeaders.indexOf("NAME")], // String registrationDescription,
+                (String)dbfrecord[DBFHeaders.indexOf("ONBADGE")], // String displayOnBadge,
+                (BigDecimal)dbfrecord[DBFHeaders.indexOf("AMOUNT")], // Double amount,
+                (boolean)dbfrecord[DBFHeaders.indexOf("BADGEOK")], // boolean badgeOk,
+                (Date)dbfrecord[DBFHeaders.indexOf("EDATE")], // Date eDate,
+                (Date)dbfrecord[DBFHeaders.indexOf("SDATE")], // Date sDate,
+                (String)dbfrecord[DBFHeaders.indexOf("KEY")], // String key,
+                (String)dbfrecord[DBFHeaders.indexOf("METACLASS")], // String metaClass,
+                (BigDecimal)dbfrecord[DBFHeaders.indexOf("ORDER")], // Double listOrder,
+                (dbfrecord[DBFHeaders.indexOf("THURSDAY")] != null) ? ((boolean)dbfrecord[DBFHeaders.indexOf("THURSDAY")]) : false,
+                (dbfrecord[DBFHeaders.indexOf("FRIDAY")] != null) ? ((boolean)dbfrecord[DBFHeaders.indexOf("FRIDAY")]) : false,
+                (dbfrecord[DBFHeaders.indexOf("SATURDAY")] != null) ? ((boolean)dbfrecord[DBFHeaders.indexOf("SATURDAY")]) : false,
+                (dbfrecord[DBFHeaders.indexOf("SUNDAY")] != null) ? ((boolean)dbfrecord[DBFHeaders.indexOf("SUNDAY")]) : false,
+                (boolean)dbfrecord[DBFHeaders.indexOf("TIMESTAMP")]  // boolean hasTimestamp
+        );
+        return r;
     }
 }

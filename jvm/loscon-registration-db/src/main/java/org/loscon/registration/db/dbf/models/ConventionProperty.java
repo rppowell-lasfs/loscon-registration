@@ -1,14 +1,12 @@
-package org.loscon.registration.db.dbf;
+package org.loscon.registration.db.dbf.models;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-@Entity
 public class ConventionProperty {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+
     long id;
 
     public String name;

@@ -1,4 +1,4 @@
-package org.loscon.registration.db.dbf;
+package org.loscon.registration.db.dbf.models;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,11 +8,15 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.List;
 
-@Entity
 public class Master {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+
+    public final static List<String> DBFHeaders = Arrays.asList(
+            "FNAME", "LNAME", "SUFFIX", "ADDR1", "ADDR2", "CITY", "STATE", "ZIP", "COUNTRY", "ID", "PHONE", "EMAIL", "ADDRSTAT", "MODDATE", "CATEGORY", "BADGENAME", "PREV_CITY", "VANITYNUM", "POSITION"
+    );
+
+
     public BigDecimal ID;
 
     public String FNAME;
@@ -78,5 +82,30 @@ public class Master {
         m.put("VANITYNUM", this.VANITYNUM);
         m.put("POSITION", this.POSITION);
         return m.toString();
+    }
+
+    public static Master ExtractFromDBFRecord(Object[] dbfrecord) {
+        Master m = new Master(
+                (String)dbfrecord[DBFHeaders.indexOf("FNAME")],
+                (String)dbfrecord[DBFHeaders.indexOf("LNAME")],
+                (String)dbfrecord[DBFHeaders.indexOf("SUFFIX")],
+                (String)dbfrecord[DBFHeaders.indexOf("ADDR1")],
+                (String)dbfrecord[DBFHeaders.indexOf("ADDR2")],
+                (String)dbfrecord[DBFHeaders.indexOf("CITY")],
+                (String)dbfrecord[DBFHeaders.indexOf("STATE")],
+                (String)dbfrecord[DBFHeaders.indexOf("ZIP")],
+                (String)dbfrecord[DBFHeaders.indexOf("COUNTRY")],
+                (BigDecimal)dbfrecord[DBFHeaders.indexOf("ID")],
+                (String)dbfrecord[DBFHeaders.indexOf("PHONE")],
+                (String)dbfrecord[DBFHeaders.indexOf("EMAIL")],
+                (BigDecimal)dbfrecord[DBFHeaders.indexOf("ADDRSTAT")],
+                (Date)dbfrecord[DBFHeaders.indexOf("MODDATE")],
+                (String)dbfrecord[DBFHeaders.indexOf("CATEGORY")],
+                (String)dbfrecord[DBFHeaders.indexOf("BADGENAME")],
+                (String)dbfrecord[DBFHeaders.indexOf("PREV_CITY")],
+                (String)dbfrecord[DBFHeaders.indexOf("VANITYNUM")],
+                (String)dbfrecord[DBFHeaders.indexOf("POSITION")]
+        );
+        return m;
     }
 }
