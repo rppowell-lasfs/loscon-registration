@@ -1,15 +1,13 @@
 package org.loscon.registration.db;
 
 import com.linuxense.javadbf.DBFReader;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.loscon.registration.db.dbf.DBFUtils;
-import org.loscon.registration.db.dbf.models.ConventionProperty;
 import org.loscon.registration.db.dbf.models.Master;
+import org.loscon.registration.db.dbf.models.RegConfi;
 import org.loscon.registration.db.dbf.models.Member;
-import org.loscon.registration.db.dbf.models.RegistrationClass;
+import org.loscon.registration.db.dbf.models.RegClass;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -39,14 +37,37 @@ public class MigrateDBFToSQLiteHibernate5Tests {
                 .addProperties(prop)
                 .addAnnotatedClass(Member.class)
                 .addAnnotatedClass(Master.class)
-                .addAnnotatedClass(RegistrationClass.class)
-                .addAnnotatedClass(ConventionProperty.class)
+                .addAnnotatedClass(RegClass.class)
+                .addAnnotatedClass(RegConfi.class)
                 .buildSessionFactory();
     }
 
     @Test(singleThreaded=true)
+    public void migrateDBFRegConfigEntries() throws Exception {
+        String memberDBFFilename = "../../legacy/dbf-2017-05-28/2017-05-28-members.dbf";
+
+        DBFReader reader = new DBFReader(new FileInputStream(new File(memberDBFFilename)));
+
+        List<String> actualHeaders = DBFUtils.extractTableHeaderNames(reader);
+        Assert.assertEquals(actualHeaders, Member.DBFHeaders);
+
+        //Session session = factory.openSession();
+        Object[] rowObjects;
+
+        while( (rowObjects = reader.nextRecord()) != null) {
+            Member member = Member.ExtractFromMemberDBFRecord(rowObjects);
+            System.out.println(member.toString());
+            //Transaction tx = session.beginTransaction();
+            //session.persist(member);
+            //tx.commit();
+        }
+        //session.close();
+        reader.close();
+    }
+
+    @Test(singleThreaded=true)
     public void migrateDBFMemberEntries() throws Exception {
-        String memberDBFFilename = "testdata/legacy/dbf/2017-05-28-members.dbf";
+        String memberDBFFilename = "../../legacy/dbf-2017-05-28/2017-05-28-members.dbf";
 
         DBFReader reader = new DBFReader(new FileInputStream(new File(memberDBFFilename)));
 
@@ -121,7 +142,7 @@ public class MigrateDBFToSQLiteHibernate5Tests {
 //
 //        DBFReader reader = new DBFReader(new FileInputStream(new File(masterDbfFilename)));
 //
-//        if (!DBFUtils.extractTableHeaderNames(reader).equals(RegistrationClass.DBFHeaders)) {
+//        if (!DBFUtils.extractTableHeaderNames(reader).equals(RegClass.DBFHeaders)) {
 //            throw new Exception("ClassesDBF Header mismatch");
 //        }
 //
@@ -129,7 +150,7 @@ public class MigrateDBFToSQLiteHibernate5Tests {
 //        Object[] rowObjects;
 //
 //        while( (rowObjects = reader.nextRecord()) != null) {
-//            RegistrationClass r = RegistrationClass.ExtractFromDBFRecord(rowObjects);
+//            RegClass r = RegClass.ExtractFromDBFRecord(rowObjects);
 //            System.out.println(r.toString());
 //            Transaction tx = session.beginTransaction();
 //            session.persist(r);
@@ -150,7 +171,7 @@ public class MigrateDBFToSQLiteHibernate5Tests {
 //
 //        //for( int i=0; i<numberOfFields; i++) { System.out.println(reader.getField(i).getName()); }
 //
-//        ConventionProperty cp;
+//        RegConfi cp;
 //        Object []rowObjects;
 //        rowObjects = reader.nextRecord();
 //        if (rowObjects != null) {
@@ -158,7 +179,7 @@ public class MigrateDBFToSQLiteHibernate5Tests {
 //            for( int i=0; i<rowObjects.length; i++) {
 //                conventionproperties.setProperty(reader.getField(i).getName(), rowObjects[i].toString());
 //                Transaction tx = session.beginTransaction();
-//                cp = new ConventionProperty(reader.getField(i).getName(), rowObjects[i].toString());
+//                cp = new RegConfi(reader.getField(i).getName(), rowObjects[i].toString());
 //                session.persist(cp);
 //                tx.commit();
 //            }

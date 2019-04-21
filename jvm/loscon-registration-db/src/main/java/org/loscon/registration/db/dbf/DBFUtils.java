@@ -2,14 +2,8 @@ package org.loscon.registration.db.dbf;
 
 import com.linuxense.javadbf.DBFException;
 import com.linuxense.javadbf.DBFReader;
-import org.loscon.registration.db.dbf.models.Master;
-import org.loscon.registration.db.dbf.models.Member;
-import org.loscon.registration.db.dbf.models.RegistrationClass;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 public class DBFUtils {

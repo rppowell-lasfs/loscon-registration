@@ -8,13 +8,18 @@ import com.j256.ormlite.table.TableUtils;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class SqliteOrmliteTests {
     @Test
-    public void SqliteOrmliteTestOne () throws SQLException, IOException {
-        String testSQLiteDBFilename = "testdb.sqliteormlite.sqlite";
-        String databaseUrl = "jdbc:sqlite:" + testSQLiteDBFilename;
+    public void SqliteOrmliteTestConventionProperty() throws SQLException, IOException {
+        LocalDateTime localDateTime = LocalDateTime.now();
+        String testSQLiteOrmliteFilename = "testdb.sqliteormlite-testconventionproperty-" + localDateTime.toString() + ".sqlite";
+        System.out.println("testSQLiteOrmliteFilename:" + testSQLiteOrmliteFilename);
+        String databaseUrl = "jdbc:sqlite:" + testSQLiteOrmliteFilename;
         ConnectionSource connectionSource = new JdbcConnectionSource(databaseUrl);
 
         // instantiate the dao
@@ -34,4 +39,61 @@ public class SqliteOrmliteTests {
 
         connectionSource.close();
     }
+
+    @Test
+    public void SqliteOrmliteTestMembershipType() throws SQLException, IOException {
+        LocalDateTime localDateTime = LocalDateTime.now();
+        String testSQLiteOrmliteFilename = "testdb.sqliteormlite-testmembershiptype-" + localDateTime.toString() + ".sqlite";
+        System.out.println("testSQLiteOrmliteFilename:" + testSQLiteOrmliteFilename);
+        String databaseUrl = "jdbc:sqlite:" + testSQLiteOrmliteFilename;
+        ConnectionSource connectionSource = new JdbcConnectionSource(databaseUrl);
+
+        // instantiate the dao
+        Dao<MembershipType, Integer> membershiptypeDao = DaoManager.createDao(connectionSource, MembershipType.class);
+
+        // if you need to create the 'accounts' table make this call
+        TableUtils.createTableIfNotExists(connectionSource, MembershipType.class);
+
+        //{registrationClass=AdultAtCon, registrationDescription=Adult, full weekend, displayOnBadge=, amount=65.00, badgeOk=true, eDate=Sat Feb 20 00:00:00 PST 2016, sDate=Tue Jan 20 00:00:00 PST 2015, key=A, metaClass=, listOrder=2.00, isAvailableThursday=true, isAvailableFriday=true, isAvailableSaturday=true, isAvailableSunday=false, hasTimestamp=false}
+        MembershipType attendee = new MembershipType();
+        attendee.setName("AdultAtCon");
+        attendee.setDescription("Adult-full weekend");
+        attendee.setAmount(new BigDecimal(65.00));
+
+        membershiptypeDao.create(attendee);
+
+        MembershipType membershipType = membershiptypeDao.queryForId(1);
+        System.out.println(membershipType.getName() + ":" + membershipType.getDescription());
+
+        connectionSource.close();
+    }
+
+    @Test
+    public void SqliteOrmliteTestMembership() throws SQLException, IOException {
+        LocalDateTime localDateTime = LocalDateTime.now();
+        String testSQLiteOrmliteFilename = "testdb.sqliteormlite-testmembership-" + localDateTime.toString() + ".sqlite";
+        System.out.println("testSQLiteOrmliteFilename:" + testSQLiteOrmliteFilename);
+        String databaseUrl = "jdbc:sqlite:" + testSQLiteOrmliteFilename;
+        ConnectionSource connectionSource = new JdbcConnectionSource(databaseUrl);
+
+        // instantiate the dao
+        Dao<Membership, UUID> membershipDao = DaoManager.createDao(connectionSource, Membership.class);
+
+        // if you need to create the 'accounts' table make this call
+        TableUtils.createTableIfNotExists(connectionSource, Membership.class);
+
+        Membership membership = new Membership();
+        UUID uuid = UUID.randomUUID();
+        membership.setUUID(uuid);
+        membership.setFirstName("FirstName");
+        membership.setLastName("LastName");
+
+        membershipDao.create(membership);
+
+        membership = membershipDao.queryForId(uuid);
+        System.out.println(membership.getUUID() + ": " + membership.getFirstName() + " " + membership.getLastName());
+
+        connectionSource.close();
+    }
+
 }

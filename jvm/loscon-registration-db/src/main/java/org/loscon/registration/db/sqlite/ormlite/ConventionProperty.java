@@ -3,15 +3,15 @@ package org.loscon.registration.db.sqlite.ormlite;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-@DatabaseTable(tableName = "properties")
+@DatabaseTable(tableName = "Property")
 public class ConventionProperty {
-    public static final String NAME_FIELD_NAME = "name";
-    public static final String VALUE_FIELD_NAME = "value";
+    public static final String COLUMNNAME_NAME = "name";
+    public static final String COLUMNNAME_VALUE = "value";
 
-    @DatabaseField(id = true, columnName = NAME_FIELD_NAME)
+    @DatabaseField(id = true, columnName = COLUMNNAME_NAME)
     private String name;
 
-    @DatabaseField(columnName = VALUE_FIELD_NAME)
+    @DatabaseField(columnName = COLUMNNAME_VALUE)
     private String value;
 
     ConventionProperty() {}

@@ -5,14 +5,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-public class ConventionProperty {
+public class RegConfi {
 
     long id;
 
     public String name;
     public String value;
 
-    public ConventionProperty(String name, String value) {
+    public RegConfi(String name, String value) {
         this.name = name;
         this.value = value;
     }

@@ -1,10 +1,9 @@
 package org.loscon.registration.db.dbf;
 
-import com.linuxense.javadbf.DBFField;
 import com.linuxense.javadbf.DBFReader;
 import org.loscon.registration.db.dbf.models.Master;
 import org.loscon.registration.db.dbf.models.Member;
-import org.loscon.registration.db.dbf.models.RegistrationClass;
+import org.loscon.registration.db.dbf.models.RegClass;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -17,8 +16,8 @@ import java.util.Properties;
 public class DBFReaderLegacyTests {
 
     @Test(singleThreaded=true)
-    public void DumpRegConfigDBF() throws IOException {
-        String classesDBF = "testdata/legacy/dbf/2017-05-28-regconfi.dbf";
+    public void DumpRegConfiDBF() throws IOException {
+        String classesDBF = "../../legacy/dbf-2017-05-28/2017-05-28-regconfi.dbf";
         File file = new File(classesDBF);
         FileInputStream fs = new FileInputStream(new File(classesDBF));
         DBFReader reader = new DBFReader(fs);
@@ -35,32 +34,30 @@ public class DBFReaderLegacyTests {
             }
             System.out.println(conventionproperties.toString());
         }
-
     }
 
     @Test(singleThreaded=true)
-    public void DumpClassesDBF() throws Exception {
-        String classesDBFFilename = "testdata/legacy/dbf/2017-05-28-classes.dbf";
+    public void DumpRegClassesDBF() throws Exception {
+        String classesDBFFilename = "../../legacy/dbf-2017-05-28/2017-05-28-classes.dbf";
         FileInputStream fs = new FileInputStream(new File(classesDBFFilename));
 
         DBFReader reader = null;
         reader = new DBFReader(fs);
 
         List<String> actualHeaders = DBFUtils.extractTableHeaderNames(reader);
-        Assert.assertEquals(actualHeaders, RegistrationClass.DBFHeaders);
+        Assert.assertEquals(actualHeaders, RegClass.DBFHeaders);
 
         Object[] rowObjects;
         while( (rowObjects = reader.nextRecord()) != null) {
-            RegistrationClass r = RegistrationClass.ExtractFromDBFRecord(rowObjects);
+            RegClass r = RegClass.ExtractFromDBFRecord(rowObjects);
             System.out.println(r.toString());
         }
-
         fs.close();
     }
 
     @Test(singleThreaded=true)
     public void DumpMembersDBF() throws Exception {
-        String memberDBFFilename = "testdata/legacy/dbf/2017-05-28-members.dbf";
+        String memberDBFFilename = "../../legacy/dbf-2017-05-28/2017-05-28-members.dbf";
 
         DBFReader reader = new DBFReader(new FileInputStream(new File(memberDBFFilename)));
 
@@ -77,7 +74,7 @@ public class DBFReaderLegacyTests {
 
     @Test(singleThreaded=true)
     public void DumpMasterDBF() throws Exception {
-        String masterDBFFilename = "testdata/legacy/dbf/2017-05-28-master.dbf";
+        String masterDBFFilename = "../../legacy/dbf-2017-05-28/2017-05-28-master.dbf";
         FileInputStream fs = new FileInputStream(new File(masterDBFFilename));
 
         DBFReader reader = null;
@@ -93,5 +90,4 @@ public class DBFReaderLegacyTests {
         }
         fs.close();
     }
-
 }

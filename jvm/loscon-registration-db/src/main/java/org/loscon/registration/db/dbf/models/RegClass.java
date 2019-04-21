@@ -1,16 +1,12 @@
 package org.loscon.registration.db.dbf.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-public class RegistrationClass {
+public class RegClass {
 
     public final static List<String> DBFHeaders = Arrays.asList(
             //"AMOUNT", "BADGEOK", "CLASS", "EDATE", "FRIDAY", "KEY", "METACLASS", "NAME", "ONBADGE", "ORDER", "SATURDAY", "SDATE", "SUNDAY", "THURSDAY", "TIMESTAMP"
@@ -36,7 +32,7 @@ public class RegistrationClass {
     public boolean hasTimestamp;
 
 
-    public RegistrationClass(
+    public RegClass(
             String registrationClass,
             String registrationDescription,
             String displayOnBadge,
@@ -109,8 +105,8 @@ public class RegistrationClass {
         ).toString();
     }
 
-    public static RegistrationClass ExtractFromDBFRecord(Object[] dbfrecord) {
-        RegistrationClass r = new RegistrationClass(
+    public static RegClass ExtractFromDBFRecord(Object[] dbfrecord) {
+        RegClass r = new RegClass(
                 (String)dbfrecord[DBFHeaders.indexOf("CLASS")], // String registrationClass,
                 (String)dbfrecord[DBFHeaders.indexOf("NAME")], // String registrationDescription,
                 (String)dbfrecord[DBFHeaders.indexOf("ONBADGE")], // String displayOnBadge,
