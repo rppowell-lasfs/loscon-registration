@@ -12,7 +12,16 @@ repositories {
 
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.3.11'
-    
+
+    // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
+    //compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.26'
+
+    // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
+    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.11.2'
+    // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j-impl
+    compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.11.2'
+
+
     // Legacy DBF
 
     // https://mvnrepository.com/artifact/com.linuxense/javadbf

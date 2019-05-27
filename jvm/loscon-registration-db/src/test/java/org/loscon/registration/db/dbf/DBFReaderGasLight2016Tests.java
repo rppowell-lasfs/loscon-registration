@@ -10,16 +10,25 @@ import org.testng.annotations.Test;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Properties;
 
-public class DBFReaderLegacyTests {
+public class DBFReaderGasLight2016Tests {
 
     @Test(singleThreaded=true)
-    public void DumpRegConfiDBF() throws IOException {
-        String classesDBF = "../../legacy/dbf-2017-05-28/2017-05-28-regconfi.dbf";
-        File file = new File(classesDBF);
-        FileInputStream fs = new FileInputStream(new File(classesDBF));
+    public void DumpregconfiDBF() throws Exception {
+        String regconfiDBFFilename = "../../legacy/dbf-2017-05-28/2017-05-28-regconfi.dbf";
+        FileInputStream fs = new FileInputStream(new File(regconfiDBFFilename));
+        DBFUtils.dumpDBF(fs);
+        fs.close();
+    }
+
+    @Test(singleThreaded=true)
+    public void ProcessRegConfiDBF() throws IOException {
+        String regconfiDBFFilename = "../../legacy/dbf-2017-05-28/2017-05-28-regconfi.dbf";
+        File file = new File(regconfiDBFFilename);
+        FileInputStream fs = new FileInputStream(new File(regconfiDBFFilename));
         DBFReader reader = new DBFReader(fs);
 
         Properties conventionproperties = new Properties();
@@ -64,10 +73,18 @@ public class DBFReaderLegacyTests {
         List<String> actualHeaders = DBFUtils.extractTableHeaderNames(reader);
         Assert.assertEquals(actualHeaders, Member.DBFHeaders);
 
+
+        LinkedHashMap info = null;
+
         Object[] rowObjects;
         while( (rowObjects = reader.nextRecord()) != null) {
             Member m = Member.ExtractFromMemberDBFRecord(rowObjects);
-            System.out.println(m.toString());
+            //System.out.println(m.toString());
+            info = new LinkedHashMap<String, String>();
+            info.put("CLASS", m.CLASS);
+            info.put("NUMBER", m.NUMBER);
+            info.put("NAME", m.FNAME + " " + m.LNAME);
+            System.out.println(info);
         }
         reader.close();
     }
@@ -84,10 +101,13 @@ public class DBFReaderLegacyTests {
         Assert.assertEquals(actualHeaders, Master.DBFHeaders);
 
         Object[] rowObjects;
+        int i = 0;
         while( (rowObjects = reader.nextRecord()) != null) {
             Master m = Master.ExtractFromDBFRecord(rowObjects);
+            i++;
             //System.out.println(m);
         }
+        System.out.println(i+" records processed");
         fs.close();
     }
 }

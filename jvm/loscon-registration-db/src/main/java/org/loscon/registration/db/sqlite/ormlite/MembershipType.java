@@ -3,11 +3,39 @@ package org.loscon.registration.db.sqlite.ormlite;
 import com.j256.ormlite.field.DatabaseField;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 
 public class MembershipType {
+    public static class Builder {
+        private String name;
+        private String description;
+        private String displayOnBadge;
+        private BigDecimal amount;
+        private Date startDate;
+        private Date endDate;
 
-    @DatabaseField(generatedId = true)
+        public Builder withName(String name) { this.name = name; return this; }
+        public Builder withDescription(String description) { this.description = description; return this; }
+        public Builder displayOnBadge(String displayOnBadge) { this.displayOnBadge = displayOnBadge; return this; }
+        public Builder withAmount(BigDecimal amount) { this.amount = amount; return this; }
+        public Builder withStartDate(Date startDate) { this.startDate = startDate; return this; }
+        public Builder withEndDate(Date endDate) { this.endDate = endDate; return this; }
+
+        public Builder() {};
+
+        public MembershipType build() {
+            MembershipType membershipType = new MembershipType();
+            membershipType.setName(name);
+            membershipType.setDescription(description);
+            membershipType.setDisplayOnBadge(displayOnBadge);
+            membershipType.setAmount(amount);
+            return membershipType;
+        }
+    }
+
+    public static final String COLUMNNAME_ID = "id";
+    @DatabaseField(generatedId = true, columnName = COLUMNNAME_ID)
     private int id;
 
     public static final String COLUMNNAME_NAME = "name";
@@ -34,7 +62,7 @@ public class MembershipType {
     @DatabaseField(columnName = COLUMNNAME_ENDDATE)
     private Date endDate;
 
-    MembershipType() {}
+    public MembershipType() {}
 
     public String getName() {
         return name;
